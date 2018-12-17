@@ -8,7 +8,9 @@ import {
 	getPayToUserJWT,
 	validateJWT,
 	getRegisterJWT,
-	signArbitraryPayload } from "./services";
+	signArbitraryPayload,
+	getP2pTransferJWT,
+	getPaymentToken } from "./services";
 import {
 	statusHandler,
 	notFoundHandler,
@@ -40,6 +42,8 @@ app.get("/validate", validateJWT);
 
 app.post("/sign", signArbitraryPayload);
 app.get("/status", statusHandler);
+app.post("/p2ptransfer/token", getP2pTransferJWT);
+app.post("/payment/token", getPaymentToken);
 
 // catch 404
 app.use(notFoundHandler);

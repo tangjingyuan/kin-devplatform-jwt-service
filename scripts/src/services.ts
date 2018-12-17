@@ -148,6 +148,65 @@ export const signArbitraryPayload = function(req: ArbitraryPayloadRequest, res: 
 	}
 } as any as RequestHandler;
 
+export type P2pTransferRequest = Request & {
+	body: {
+		offer_id: string;
+		amount: string;
+		sender_title: string;
+		sender_description: string;
+		sender_id: string;
+		recipient_title: string;
+		recipient_description: string;
+		recipient_id: string;
+	}
+};
+
+export const getP2pTransferJWT = function(req: P2pTransferRequest, res: Response) {
+	if (req.body.offer_id && req.body.amount 
+		&& req.body.sender_title && req.body.sender_description && req.body.sender_id 
+		&& req.body.recipient_title && req.body.recipient_description && req.body.recipient_id) {
+
+		getDefaultLogger().info(req.body);
+
+		const payload = {
+			offer: { id: req.body.offer_id, amount: req.body.amount},
+			sender: { title: req.body.sender_title, description: req.body.sender_description, user_id: req.body.sender_id },
+			recipient: { title: req.body.recipient_title, description: req.body.recipient_description, user_id: req.body.recipient_id }
+		}
+
+		res.status(200).json({ jwt: sign("pay_to_user", payload)});
+	} else {
+		res.status(500).send({ error: " missing parameter" });
+	}
+} as any as RequestHandler;
+
+export type GetPaymentToken = Request & {
+	body: {
+		offer_id: string;
+		amount: string;
+		user_id: string;
+		title: string;
+		description: string;
+	}
+};
+
+export const getPaymentToken = function(req: GetPaymentToken, res: Response) {
+	if (req.body.offer_id 
+		&& req.body.amount 
+		&& req.body.user_id 
+		&& req.body.title 
+		&& req.body.description) {		
+		const payload = {
+			offer: { id: req.body.offer_id, amount: req.body.amount},
+			recipient: { title: req.body.title, description: req.body.description, user_id: req.body.user_id}
+		}
+
+		res.status(200).json({ jwt: sign("earn", payload)});
+	} else {
+
+	}
+} as any as RequestHandler;
+
 export type ValidateRequest = Request & {
 	query: {
 		jwt: string;

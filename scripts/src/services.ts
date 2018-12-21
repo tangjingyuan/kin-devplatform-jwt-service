@@ -261,8 +261,8 @@ function sign(subject: string, payload: any) {
 
 	payload = Object.assign({
 		iss: getConfig().app_id,
-		exp: moment().add(6, "hours").valueOf(),
-		iat: moment().valueOf(),
+		exp: moment().add(6, "hours").unix(),
+		iat: moment().unix(),
 		sub: subject
 	}, payload);
 
